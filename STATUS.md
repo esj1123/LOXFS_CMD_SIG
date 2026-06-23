@@ -8,7 +8,7 @@ M1 Protocol Core remains future work and must not begin while `scripts/m1_readin
 
 ## Preflight Snapshot
 
-Last checked: 2026-06-23.
+Last checked: 2026-06-24.
 
 | Check | Result |
 | --- | --- |
@@ -26,7 +26,8 @@ Last checked: 2026-06-23.
 | `.NET` | SDK 10.0.201 and 10.0.109 present. |
 | PowerShell | 5.1.26100.8655. |
 | `local/` files | 13 files, 0 bytes total, all hidden Office artifacts in the sandbox view. |
-| Migration dry-run | Reports 13 `source_only` `local/` entries and keeps source files. |
+| Bootstrap dry-run | Recommended external root shape plans 10 directories and creates nothing without `--apply`. |
+| Migration dry-run | Reports 13 `source_only` `local/` entries and keeps source files; source hash metadata was unavailable for the preserved hidden Office placeholders. |
 | Known sync root in repository path | None detected from the path string. |
 
 ## Hardening Outcome
@@ -40,8 +41,9 @@ Last checked: 2026-06-23.
 ## Current Blockers
 
 - GitHub `origin` is allowed only as a backup/publication remote; any additional remote or URL change remains a validation error.
-- `repo.ps1 validate` fails with 37 storage errors because forbidden hidden Office artifacts named `31LHLCIT.DOCX` exist in the repository worktree, including under `local/`.
-- `repo.ps1 migrate-plan --local-root C:\LOXFS_CMD_SIG_LOCAL` is dry-run only and reports the 13 `local/` hidden Office artifacts as `source_only`.
+- `repo.ps1 validate` fails with 37 storage errors because forbidden hidden Office artifacts named `CAJJL2.DOCX` exist in the repository worktree, including under `local/`.
+- `repo.ps1 bootstrap --local-root C:\LOXFS_CMD_SIG_LOCAL` remains dry-run only and reports 10 planned external directories.
+- `repo.ps1 migrate-plan --local-root C:\LOXFS_CMD_SIG_LOCAL` remains dry-run only and reports the 13 `local/` hidden Office artifacts as `source_only`/`keep_source`; no copy or removal was performed.
 - Parent Git repository disposition remains Open in `DEC-REPO-001`.
 - External local artifact root remains Open in `DEC-STORAGE-001`.
 - `SRC-PROTO-001`, `SRC-K117-001`, `SRC-NA-001`, and `SRC-TIME-001` remain `TBD`/`not_collected`.
@@ -55,5 +57,5 @@ Last checked: 2026-06-23.
 - Legacy RSID binary execution: not performed.
 - External package installation: not performed.
 - Remote creation and GitHub pushes: performed for the owner-designated backup/publication repository only.
-- Automatic commit: not performed.
+- Automatic commit without owner approval: not performed.
 - M1 Protocol implementation: not performed.

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Refresh storage-boundary status with dry-run bootstrap and migration planning results; no user files were moved or deleted.
 - Treat the owner-designated GitHub `origin` as backup/publication only, not as harness runtime, source baseline, validation evidence, or readiness authority.
 - Update Git safety validation so the approved backup remote is allowed while unapproved remotes remain errors.
 - Adopt build-stage governance practices from `codex-dev-harness`: task contract, change class, `NOT RUN` reporting, and closeout receipt.

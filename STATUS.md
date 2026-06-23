@@ -39,6 +39,7 @@ Last checked: 2026-06-23.
 
 ## Current Blockers
 
+- `repo.ps1 validate` reports `Git remote is configured` because the owner-approved GitHub `origin` is now present; the validator still treats any remote as an M1-blocking repository safety condition until the remote policy is explicitly revised.
 - `repo.ps1 validate` fails with 37 storage errors because forbidden hidden Office artifacts named `31LHLCIT.DOCX` exist in the repository worktree, including under `local/`.
 - `repo.ps1 migrate-plan --local-root C:\LOXFS_CMD_SIG_LOCAL` is dry-run only and reports the 13 `local/` hidden Office artifacts as `source_only`.
 - Parent Git repository disposition remains Open in `DEC-REPO-001`.
@@ -49,7 +50,7 @@ Last checked: 2026-06-23.
 ## Safety Status
 
 - Actual controller access: not performed.
-- Actual network access: not performed.
+- Actual controller or operational network access: not performed.
 - NetArrays execution: not performed.
 - Legacy RSID binary execution: not performed.
 - External package installation: not performed.

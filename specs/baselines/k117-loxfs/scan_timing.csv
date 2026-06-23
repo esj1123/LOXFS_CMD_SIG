@@ -1,0 +1,5 @@
+﻿timing_id,item,value,unit,status,source_ref,notes
+TIME-001,supported_node_scan_cycle,5/10/15/20/25,ms,candidate,SRC-TIME-001,Supported values are not the actual LOXFS scan cycle.
+TIME-002,io_application_delay,2,scans,candidate,SRC-TIME-001,Application delay candidate.
+TIME-003,actual_loxfs_scan_cycle,TBD,ms,Open,SRC-TIME-001,Actual value must remain separate from supported values.
+TIME-004,local_harness_timing_mode,scan_index_preferred,n/a,candidate,SRC-TIME-001,Use scan index for local harness timing until actual timing is approved.

@@ -1,0 +1,9 @@
+﻿type_value,type_name,ack_type_value,direction,source_status,notes
+34,USR_CONTROL,35,command_to_peer,candidate,ACK type candidate pending source verification.
+35,USR_CONTROL_ACK,,ack_to_sender,candidate,Header-only ACK candidate.
+36,PERIODIC_USR_DATA,37,data_to_peer,candidate,ACK type candidate pending source verification.
+37,PERIODIC_USR_DATA_ACK,,ack_to_sender,candidate,Header-only ACK candidate.
+38,USR_TESTING,39,test_to_peer,candidate,ACK type candidate pending source verification.
+39,USR_TESTING_ACK,,ack_to_sender,candidate,Header-only ACK candidate.
+40,APERIODIC_USR_DATA,41,data_to_peer,candidate,ACK type candidate pending source verification.
+41,APERIODIC_USR_DATA_ACK,,ack_to_sender,candidate,Header-only ACK candidate.

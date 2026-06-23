@@ -1,0 +1,5 @@
+﻿detail_value,detail_name,ack_detail_value,source_status,notes
+50,SESSION_CLOSE,51,candidate,Detail type candidate pending source verification.
+51,SESSION_CLOSE_ACK,,candidate,ACK detail candidate.
+52,SESSION_OPEN,53,candidate,Detail type candidate pending source verification.
+53,SESSION_OPEN_ACK,,candidate,ACK detail candidate.

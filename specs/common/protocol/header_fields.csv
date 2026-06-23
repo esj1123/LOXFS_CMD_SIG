@@ -1,0 +1,9 @@
+﻿field_order,field_name,offset_bytes,length_bytes,endian,source_status,source_ref,notes
+1,Type of Data,0,4,big,candidate,SRC-PROTO-001,Known skeleton value pending source verification.
+2,Sequence Number,4,4,big,candidate,SRC-PROTO-001,ACK correlation rule remains Open.
+3,Number of Repeated Transmission,8,4,big,candidate,SRC-PROTO-001,Retry update rule remains Open.
+4,Size of Data Block(s),12,4,big,candidate,SRC-PROTO-001,Total data block byte count candidate.
+5,Time,16,8,big,candidate,SRC-PROTO-001,Time base remains TBD.
+6,Reserve,24,16,n/a,Open,SRC-PROTO-001,Reserve use remains Open.
+7,Data CRC or Detail Type,40,4,big,Open,SRC-PROTO-001,Meaning depends on packet/session context.
+8,Header CRC,44,4,big,Open,SRC-PROTO-001,Exact CRC32 profile remains DEC-PROTO-003.

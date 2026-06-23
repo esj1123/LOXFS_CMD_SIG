@@ -1,0 +1,13 @@
+﻿source_id,system,title,revision,authority_scope,source_role,external_path,sha256,sensitivity,owner,review_state,notes
+SRC-PROTO-001,common,230131 Command Signal Protocol VerI,TBD,common,protocol_authority,TBD,TBD,external_reference,TBD,not_collected,External path and hash remain TBD.
+SRC-K117-001,K117 baseline,K117 Command & Signal catalog,TBD,K117 baseline,baseline_catalog,TBD,TBD,external_reference,TBD,not_collected,Do not infer actual legacy IDs.
+SRC-NA-001,K117 baseline,LOXFS NetArrays project/DBN,TBD,K117 baseline,tag_mapping_source,TBD,TBD,restricted_artifact,TBD,not_collected,DBN remains external_only.
+SRC-RSIDCFG-001,legacy,RSID Gateway configuration source,TBD,K117 baseline,endpoint_channel_configuration,TBD,TBD,restricted_artifact,TBD,not_collected,Actual configuration remains external_only.
+SRC-NETMAP-001,K117 baseline,Approved RSID endpoint and channel mapping,TBD,K117 baseline,approved_network_mapping,TBD,TBD,external_reference,TBD,not_collected,Actual endpoint values must not be recorded in Git.
+SRC-TIME-001,K117 baseline,Node scan-cycle configuration,TBD,K117 baseline,timing_source,TBD,TBD,external_reference,TBD,not_collected,Actual LOXFS scan cycle remains TBD.
+SRC-PTDB-001,K117 baseline,PTDB Tag export,TBD,K117 baseline,tag_export,TBD,TBD,external_reference,TBD,not_collected,No tag values imported in Phase 0.
+SRC-RSIDGW-001,legacy,RSIDGW deployment package,TBD,K117 baseline,legacy_behavior_reference,TBD,TBD,restricted_artifact,TBD,not_collected,Execution out of scope.
+SRC-RSIDSIM-001,legacy,RSIDSIM deployment package,TBD,K117 baseline,legacy_behavior_reference,TBD,TBD,restricted_artifact,TBD,not_collected,Execution out of scope.
+SRC-RSIDLOG-001,legacy,RSIDLOG deployment package,TBD,K117 baseline,legacy_behavior_reference,TBD,TBD,restricted_artifact,TBD,not_collected,Execution out of scope.
+SRC-N3G-001,N3G target,N3GP.03 REQ/SDS,TBD,N3G target,target_requirement,TBD,TBD,external_reference,TBD,not_collected,Target authority remains separate from baseline.
+SRC-N3F-001,N3F target,N3F interface equipment REQ,TBD,N3F target,target_requirement,TBD,TBD,external_reference,TBD,not_collected,Target authority remains separate from baseline.

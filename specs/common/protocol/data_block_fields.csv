@@ -1,0 +1,5 @@
+﻿field_order,field_name,offset_bytes,length_bytes,endian,source_status,source_ref,notes
+1,Data Block Header,0,1,big,candidate,SRC-PROTO-001,0x90 is a source-backed candidate pending verification.
+2,Data Dimension,1,1,big,candidate,SRC-PROTO-001,Dimension semantics remain TBD.
+3,Command or Signal ID,2,4,big,candidate,SRC-PROTO-001,Actual IDs must come from source register.
+4,Data,6,4,big,candidate,SRC-PROTO-001,Value rule depends on catalog entry.

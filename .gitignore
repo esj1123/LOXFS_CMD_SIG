@@ -1,0 +1,40 @@
+# Local-only artifacts and runtime state
+local/
+runs/
+runtime/
+artifacts/
+config/local/
+profile.local.json
+
+# Operational package and capture artifacts
+*.dbn
+*.pgm
+*.exe
+*.dll
+*.pdb
+*.zip
+*.7z
+*.rar
+*.pcap
+*.pcapng
+*.db
+*.bak
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.pdf
+*.ppt
+*.pptx
+
+# Actual configuration files
+GatewaySetting.xml
+network.cfg
+
+# Build and test output
+bin/
+obj/
+TestResults/
+.coverage/
+__pycache__/
+*.pyc

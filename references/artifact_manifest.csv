@@ -1,0 +1,7 @@
+﻿artifact_id,artifact_type,title,external_path,sha256,source_id,git_policy,review_state,notes
+ART-DOC-001,document,External command signal protocol document,TBD,TBD,SRC-PROTO-001,external_only,not_collected,Store under local/artifacts/documents if reviewed locally.
+ART-DBN-001,dbn,LOXFS NetArrays project or DBN,TBD,TBD,SRC-NA-001,external_only,not_collected,Do not commit DBN files.
+ART-RSIDGW-001,package,RSIDGW deployment package,TBD,TBD,SRC-RSIDGW-001,external_only,not_collected,Execution out of scope.
+ART-RSIDSIM-001,package,RSIDSIM deployment package,TBD,TBD,SRC-RSIDSIM-001,external_only,not_collected,Execution out of scope.
+ART-RSIDLOG-001,package,RSIDLOG deployment package,TBD,TBD,SRC-RSIDLOG-001,external_only,not_collected,Execution out of scope.
+ART-CFG-001,configuration,Actual gateway or network configuration,TBD,TBD,SRC-RSIDCFG-001,external_only,not_collected,Actual configuration must remain under the external local artifact root only.

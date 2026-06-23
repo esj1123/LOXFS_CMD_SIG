@@ -1,0 +1,2 @@
+﻿catalog_id,legacy_id,name,direction,data_type,value_rule,loxfs_tag,applicability,owner_review,source_ref,notes
+CATALOG-TEMPLATE,TBD,TBD,TBD,TBD,TBD,TBD,TBD,required,SRC-K117-001,Template row only; do not invent actual legacy IDs.

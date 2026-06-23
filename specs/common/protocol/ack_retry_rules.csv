@@ -1,0 +1,6 @@
+﻿rule_id,trigger,expected_behavior,parameter_name,parameter_value,status,source_ref,notes
+ACK-001,non-ACK packet received,send corresponding ACK immediately,ack_latency,TBD,Open,SRC-PROTO-001,Immediate behavior candidate; exact timing remains TBD.
+ACK-002,ACK packet generated,ACK packet is header-only,ack_payload_size,0,candidate,SRC-PROTO-001,Header-only ACK behavior pending verification.
+RETRY-001,ACK not received,retransmit same packet,ack_timeout,TBD,Open,SRC-PROTO-001,Timeout remains DEC-RETRY-001.
+RETRY-002,retransmission occurs,update repeated transmission count,max_retry,TBD,Open,SRC-PROTO-001,Count semantics remain DEC-RETRY-001.
+LINK-001,configured response time exceeded,transition to LINK OFF,link_off_time,TBD,Open,SRC-PROTO-001,Link-off threshold remains DEC-RETRY-001.

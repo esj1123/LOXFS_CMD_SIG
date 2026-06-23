@@ -526,11 +526,24 @@ class ValidateRepoTests(unittest.TestCase):
         with make_valid_repo() as root_name:
             self.assertFalse(any("non-loopback" in message for message in errors(Path(root_name))))
 
-    def test_git_remote_fails(self) -> None:
+    def test_unapproved_git_remote_fails(self) -> None:
         with make_valid_repo() as root_name:
             root = Path(root_name)
             git(root, "remote", "add", "origin", "https://example.invalid/repo.git")
-            self.assert_has_error(root, "Git remote is configured")
+            self.assert_has_error(root, "unapproved Git remote configured")
+
+    def test_approved_backup_git_remote_passes(self) -> None:
+        with make_valid_repo() as root_name:
+            root = Path(root_name)
+            git(root, "remote", "add", "origin", "https://github.com/esj1123/LOXFS_CMD_SIG.git")
+            self.assertFalse(any("remote" in message.lower() for message in errors(root)))
+
+    def test_additional_git_remote_fails_even_with_backup_origin(self) -> None:
+        with make_valid_repo() as root_name:
+            root = Path(root_name)
+            git(root, "remote", "add", "origin", "https://github.com/esj1123/LOXFS_CMD_SIG.git")
+            git(root, "remote", "add", "mirror", "https://example.invalid/repo.git")
+            self.assert_has_error(root, "unapproved Git remote configured: mirror")
 
     def test_missing_gitignore_pattern_fails(self) -> None:
         with make_valid_repo() as root_name:

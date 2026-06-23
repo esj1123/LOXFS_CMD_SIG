@@ -87,7 +87,7 @@ def evaluate_readiness(root: Path | str) -> tuple[list[Blocker], quality_gate.Ga
         blockers.append(Blocker("M1-STORE-001", "docs/STORAGE_BOUNDARY.md", "Move actual artifacts outside the repository through an approved migration."))
 
     if any(issue.level == "ERROR" and issue.category == "git" and "remote" in issue.message.lower() for issue in issues):
-        blockers.append(Blocker("M1-GIT-001", "references/decision_register.csv", "Remove Git remotes or obtain explicit owner approval."))
+        blockers.append(Blocker("M1-GIT-001", "docs/SAFETY_BOUNDARY.md", "Remove unapproved Git remotes or restrict them to the approved backup-only repository."))
 
     if any(issue.level == "WARNING" and issue.category == "git" and "parent Git" in issue.message for issue in issues):
         blockers.append(Blocker("M1-REPO-001", "references/decision_register.csv", "Resolve DEC-REPO-001 for nested repository disposition."))

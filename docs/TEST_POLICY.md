@@ -29,7 +29,7 @@ Expected results must come from independent source review, synthetic golden vect
 
 Validator and quality gate rule changes require standard-library `unittest` coverage.
 
-Required negative coverage includes forbidden tracked artifacts, worktree artifacts, credential assignments, non-loopback endpoints, Git remotes, missing `.gitignore` patterns, source-reference orphans, malformed protocol offsets, malformed ACK pairs, unsafe profile flags, and invalid external local roots.
+Required negative coverage includes forbidden tracked artifacts, worktree artifacts, credential assignments, non-loopback endpoints, unapproved Git remotes, approved backup-only remote handling, missing `.gitignore` patterns, source-reference orphans, malformed protocol offsets, malformed ACK pairs, unsafe profile flags, and invalid external local roots.
 
 Tests must create independent temporary Git repositories under `tempfile` and must not mutate the current repository. Synthetic strings may be used only as generated fixture contents; actual credentials, endpoints, binaries, captures, configurations, and Office/PDF artifacts must not be committed.
 

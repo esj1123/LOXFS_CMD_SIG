@@ -50,6 +50,12 @@ C:\LOXFS_CMD_SIG_LOCAL
 
 The actual local root is not hard-coded in source.
 
+## GitHub Backup Use
+
+The owner-designated GitHub repository is a backup and publication remote only.
+
+The harness must not depend on GitHub for runtime behavior, validation evidence, source baseline authority, operational configuration, or M1 readiness. Local files, local tests, local validators, source registers, and owner-reviewed external artifact records remain authoritative.
+
 ## Unsupported Work
 
 - Actual controller access

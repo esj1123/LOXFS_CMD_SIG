@@ -399,7 +399,7 @@ ACCEPTANCE_HARDENING_ITEMS = [
     "tracked artifact scan",
     "credential detection",
     "non-loopback endpoint detection",
-    "Git remote prohibition",
+    "Git backup remote restriction",
     "protocol offset validation",
     "ACK pair validation",
     "source-reference integrity",
@@ -468,6 +468,9 @@ DEVELOPMENT_PLAN_BUILD_STAGE_MARKERS = [
     "verification hygiene",
     "closeout receipt discipline",
 ]
+APPROVED_BACKUP_REMOTES = {
+    "origin": {"https://github.com/esj1123/LOXFS_CMD_SIG.git"},
+}
 
 
 @dataclass(frozen=True)
@@ -636,10 +639,37 @@ def check_gitignore(root: Path, issues: list[Issue]) -> None:
             add_issue(issues, "git", "ERROR", f"required .gitignore pattern missing: {pattern}")
 
 
+def remote_line_parts(line: str) -> tuple[str, str, str] | None:
+    parts = line.split()
+    if len(parts) < 3:
+        return None
+    return parts[0], parts[1], parts[2].strip("()")
+
+
+def check_git_remotes(root: Path, issues: list[Issue]) -> None:
+    remote_lines = git_lines(root, ["remote", "-v"], issues, "remote -v")
+    if not remote_lines:
+        return
+
+    approved_seen: set[str] = set()
+    for line in remote_lines:
+        parsed = remote_line_parts(line)
+        if parsed is None:
+            add_issue(issues, "git", "ERROR", "unparseable Git remote entry")
+            continue
+        name, url, action = parsed
+        approved_urls = APPROVED_BACKUP_REMOTES.get(name)
+        if approved_urls is None or url not in approved_urls:
+            add_issue(issues, "git", "ERROR", f"unapproved Git remote configured: {name} ({action})")
+            continue
+        approved_seen.add(name)
+
+    if approved_seen:
+        add_issue(issues, "git", "INFO", "approved backup-only Git remote configured")
+
+
 def check_git_safety(root: Path, issues: list[Issue]) -> None:
-    remotes = git_lines(root, ["remote", "-v"], issues, "remote -v")
-    if remotes:
-        add_issue(issues, "git", "ERROR", "Git remote is configured")
+    check_git_remotes(root, issues)
 
     status = git_lines(root, ["status", "--short"], issues, "status --short")
     if status:

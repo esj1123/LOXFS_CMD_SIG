@@ -19,7 +19,7 @@ Last checked: 2026-06-23.
 | Git status | Initial source baseline is committed on `main`; `.tmp.driveupload/` remains untracked and excluded from Git. |
 | Additional untracked directory | `.tmp.driveupload/` is present; contents were inspected but not deleted or added to Git. |
 | Git tracked files | Initial baseline tracks 56 source, document, specification, profile, scenario, script, and test files. |
-| Git remote | `origin` is configured for the owner-designated GitHub repository `https://github.com/esj1123/LOXFS_CMD_SIG.git`. |
+| Git remote | `origin` is configured for the owner-designated GitHub backup/publication repository `https://github.com/esj1123/LOXFS_CMD_SIG.git`; it is not used for harness runtime behavior. |
 | `py --version` | Failed: no installed Python found on PATH. |
 | `python --version` | Failed in the current session. |
 | Bundled Python used for verification | `LOXFS_HARNESS_PYTHON` was supplied at command time; source does not hard-code the path. |
@@ -39,7 +39,7 @@ Last checked: 2026-06-23.
 
 ## Current Blockers
 
-- `repo.ps1 validate` reports `Git remote is configured` because the owner-approved GitHub `origin` is now present; the validator still treats any remote as an M1-blocking repository safety condition until the remote policy is explicitly revised.
+- GitHub `origin` is allowed only as a backup/publication remote; any additional remote or URL change remains a validation error.
 - `repo.ps1 validate` fails with 37 storage errors because forbidden hidden Office artifacts named `31LHLCIT.DOCX` exist in the repository worktree, including under `local/`.
 - `repo.ps1 migrate-plan --local-root C:\LOXFS_CMD_SIG_LOCAL` is dry-run only and reports the 13 `local/` hidden Office artifacts as `source_only`.
 - Parent Git repository disposition remains Open in `DEC-REPO-001`.
@@ -54,6 +54,6 @@ Last checked: 2026-06-23.
 - NetArrays execution: not performed.
 - Legacy RSID binary execution: not performed.
 - External package installation: not performed.
-- Remote creation and initial GitHub push: performed for the owner-designated repository only.
+- Remote creation and GitHub pushes: performed for the owner-designated backup/publication repository only.
 - Automatic commit: not performed.
 - M1 Protocol implementation: not performed.

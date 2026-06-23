@@ -12,7 +12,7 @@ powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 m1-readiness
 
 - Quality gate passes.
 - Safety, secret, network, storage, and forbidden artifact errors are zero.
-- Git remote count is zero.
+- No unapproved Git remote is configured. The owner-designated GitHub `origin` may exist only as a backup/publication remote and must not be used as an operational dependency or source-baseline substitute.
 - Nested repository disposition is resolved by owner review.
 - `DEC-DEV-001` is resolved before choosing implementation runtime.
 - `DEC-STORAGE-001` is resolved before relying on external artifact storage.

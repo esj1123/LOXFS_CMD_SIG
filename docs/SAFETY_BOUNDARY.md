@@ -18,6 +18,12 @@ Phase 0 does not execute NetArrays or any RSID program.
 
 Future NetArrays work may use only a simulator mode and requires a separate approval gate before any execution path is added.
 
+## GitHub Backup Boundary
+
+The owner-designated GitHub `origin` remote may be used only for source backup and publication.
+
+It is not an operational endpoint, runtime dependency, source baseline authority, validation evidence source, artifact store, or readiness substitute. Any additional remote or changed remote URL is a repository safety error until separately reviewed.
+
 ## Validation Boundary
 
 `scripts/validate_repo.py` and `scripts/quality_gate.py` are safety tooling only. They must not access controllers, operational networks, external APIs, cloud services, package registries, NetArrays, or legacy RSID binaries.

@@ -20,7 +20,7 @@ Discovery date: 2026-06-18.
 | Existing STATUS.md | Not present before bootstrap. |
 | Existing .gitignore | Not present before bootstrap. |
 | Git status before bootstrap | Parent repository contained unrelated changes outside this workspace; they were not touched. |
-| Git action | Local Git repository initialized in the requested root; no remote was created. |
+| Git action | Local Git repository initialized in the requested root; owner-designated GitHub backup remote configured after approval. |
 | git --version | `git version 2.53.0.windows.1` |
 | py --version | Failed: no installed Python found on PATH. |
 | python --version | Failed: `python.exe` could not be launched from PATH. |
@@ -42,7 +42,7 @@ Discovery date: 2026-06-19.
 | Git top-level | `C:/Users/KSLV-II/Desktop/Codex/LOXFS_CMD_SIG_HARNESS` |
 | Parent Git repository | Detected by ancestor `.git`; tracked as `DEC-REPO-001`. |
 | Plain Git status | Blocked by dubious ownership unless per-command `safe.directory` is supplied. |
-| Git remote | None. |
+| Git remote | `origin` is configured as backup/publication only and is not part of harness runtime behavior. |
 | Git tracked files | None. |
 | Git untracked candidates | Repository source files and hardening files. |
 | Forbidden worktree artifacts | 37 hidden Office artifact candidates detected by validator; user files were preserved. |

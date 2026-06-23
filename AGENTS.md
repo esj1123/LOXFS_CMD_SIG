@@ -75,6 +75,7 @@ The repository may borrow governance practices from external harness templates o
 - Do not change Validator security rules without negative tests.
 - Do not start M1 Protocol Core implementation while M1 readiness is `BLOCKED`.
 - Do not automatically change parent Git repository settings, Git remotes, or nested repository disposition.
+- Treat the owner-designated GitHub `origin` as backup-only; do not use it as a runtime dependency, source authority, validation evidence source, or operational channel.
 
 ## Reporting
 

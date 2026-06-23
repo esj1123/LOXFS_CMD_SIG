@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Treat the owner-designated GitHub `origin` as backup/publication only, not as harness runtime, source baseline, validation evidence, or readiness authority.
+- Update Git safety validation so the approved backup remote is allowed while unapproved remotes remain errors.
 - Adopt build-stage governance practices from `codex-dev-harness`: task contract, change class, `NOT RUN` reporting, and closeout receipt.
 - Add document validation and regression tests for the build-stage governance markers.
 - Defer scanner, gate-module, CI, release, profile, render, RAG, and artifact-publishing ideas to separate owner-scoped future work.

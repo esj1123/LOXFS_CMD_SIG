@@ -8,6 +8,7 @@ baseline values.
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -16,9 +17,14 @@ import quality_gate
 import validate_repo
 
 
-READY_SOURCE_IDS = ["SRC-PROTO-001", "SRC-K117-001", "SRC-NA-001", "SRC-TIME-001"]
+READY_SOURCE_IDS = ["SRC-PROTO-001", "SRC-K117-001", "SRC-TIME-001"]
 READY_DECISION_IDS = ["DEC-DEV-001", "DEC-STORAGE-001", "DEC-REPO-001"]
 APPROVED_STATUSES = {"approved", "accepted", "resolved", "closed"}
+READY_REVIEW_STATES = {"reviewed", "approved"}
+PLACEHOLDER_VALUES = {"", "tbd", "not_collected", "open", "null", "none", "placeholder"}
+SHA256_RE = re.compile(r"^[0-9a-fA-F]{64}$")
+URL_SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*://")
+WINDOWS_ABSOLUTE_RE = re.compile(r"^[A-Za-z]:[\\/]")
 
 
 @dataclass(frozen=True)
@@ -34,14 +40,51 @@ def is_resolved(row: dict[str, str] | None) -> bool:
     return (row.get("status") or "").strip().lower() in APPROVED_STATUSES
 
 
-def source_complete(row: dict[str, str] | None) -> bool:
-    if row is None:
+def is_placeholder(value: str) -> bool:
+    return value.strip().lower() in PLACEHOLDER_VALUES
+
+
+def is_path_alias(value: str) -> bool:
+    alias = value.strip()
+    if is_placeholder(alias):
         return False
-    for column in ("revision", "external_path", "sha256", "owner", "review_state"):
-        value = (row.get(column) or "").strip()
-        if not value or value.upper() == "TBD" or value.lower() in {"not_collected", "open"}:
-            return False
+    if WINDOWS_ABSOLUTE_RE.match(alias):
+        return False
+    if alias.startswith(("/", "\\")):
+        return False
+    if alias.startswith("~"):
+        return False
+    if URL_SCHEME_RE.match(alias):
+        return False
+    if "\\\\" in alias or "\\" in alias:
+        return False
+    if ".." in alias.split("/"):
+        return False
+    if ":" in alias:
+        return False
     return True
+
+
+def source_metadata_errors(row: dict[str, str] | None) -> list[str]:
+    if row is None:
+        return ["missing source row"]
+
+    errors: list[str] = []
+    if is_placeholder(row.get("revision", "")):
+        errors.append("revision")
+    if not is_path_alias(row.get("external_path", "")):
+        errors.append("path alias")
+    if not SHA256_RE.match((row.get("sha256") or "").strip()):
+        errors.append("64-hex SHA-256")
+    if is_placeholder(row.get("owner", "")):
+        errors.append("owner")
+    if (row.get("review_state") or "").strip().lower() not in READY_REVIEW_STATES:
+        errors.append("review_state")
+    return errors
+
+
+def source_complete(row: dict[str, str] | None) -> bool:
+    return not source_metadata_errors(row)
 
 
 def load_registers(root: Path) -> tuple[dict[str, dict[str, str]], dict[str, dict[str, str]]]:
@@ -99,7 +142,13 @@ def evaluate_readiness(root: Path | str) -> tuple[list[Blocker], quality_gate.Ga
 
     for source_id in READY_SOURCE_IDS:
         if not source_complete(source_by_id.get(source_id)):
-            blockers.append(Blocker(source_id, "references/source_register.csv", "Collect revision, path alias, SHA-256, owner, and review state."))
+            blockers.append(
+                Blocker(
+                    source_id,
+                    "references/source_register.csv",
+                    "Collect reviewed revision, non-absolute path alias, 64-hex SHA-256, owner, and review_state.",
+                )
+            )
 
     if any(issue.level == "ERROR" and issue.category in {"reference", "protocol"} for issue in issues):
         blockers.append(Blocker("M1-PROTO-REF-001", "specs/common/protocol", "Resolve protocol table and source-reference validation errors."))

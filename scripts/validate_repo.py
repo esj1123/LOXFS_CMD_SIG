@@ -12,6 +12,7 @@ import csv
 import ipaddress
 import json
 import re
+import stat
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -66,6 +67,8 @@ REQUIRED_FILES = [
     "scripts/validate_repo.py",
     "scripts/quality_gate.py",
     "scripts/m1_readiness.py",
+    "scripts/owner_review_packet.py",
+    "scripts/source_review_recheck.py",
     "scripts/repo.ps1",
 ]
 
@@ -279,6 +282,7 @@ REQUIRED_GITIGNORE_PATTERNS = [
     "*.pcapng",
     "*.db",
     "*.bak",
+    ".tmp.driveupload/",
 ]
 
 FORBIDDEN_EXTENSIONS = {
@@ -301,6 +305,15 @@ FORBIDDEN_EXTENSIONS = {
     ".xlsx",
     ".ppt",
     ".pptx",
+}
+ENVIRONMENTAL_DECOY_EXTENSIONS = {
+    ".doc",
+    ".docx",
+    ".xls",
+    ".xlsx",
+    ".ppt",
+    ".pptx",
+    ".pdf",
 }
 FORBIDDEN_EXACT_NAMES = {"gatewaysetting.xml", "network.cfg", "profile.local.json"}
 FORBIDDEN_PATH_PREFIXES = [
@@ -369,6 +382,8 @@ XML_ATTR_SECRET_RE = re.compile(
 IPV4_RE = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
 URL_RE = re.compile(r"\bhttps?://(?P<host>[A-Za-z0-9_.-]+)(?::\d+)?(?:/[^\s'\"<>]*)?", re.IGNORECASE)
 UNC_RE = re.compile(r"\\\\[A-Za-z0-9_.-]+\\")
+WINDOWS_ABSOLUTE_PATH_RE = re.compile(r"\b[A-Za-z]:[\\/][^\s`'\"<>|]+")
+ALLOWED_DOCUMENTED_PATH_PREFIXES = {"c:/loxfs_cmd_sig_local"}
 ENDPOINT_ASSIGNMENT_RE = re.compile(
     r"""(?ix)
     (?:^|[\s,{;])
@@ -570,6 +585,45 @@ def is_forbidden_artifact(path: Path, root: Path) -> bool:
     return False
 
 
+def has_hidden_system_attributes(file_stat: object) -> bool:
+    attributes = getattr(file_stat, "st_file_attributes", 0)
+    hidden = getattr(stat, "FILE_ATTRIBUTE_HIDDEN", 0x2)
+    system = getattr(stat, "FILE_ATTRIBUTE_SYSTEM", 0x4)
+    return bool(attributes & hidden and attributes & system)
+
+
+def read_probe_reports_missing(path: Path) -> bool:
+    try:
+        with path.open("rb") as handle:
+            handle.read(1)
+        return False
+    except FileNotFoundError:
+        return True
+    except OSError as exc:
+        return getattr(exc, "winerror", None) in {2, 3}
+
+
+def os_error_reports_missing(exc: OSError) -> bool:
+    return isinstance(exc, FileNotFoundError) or getattr(exc, "winerror", None) in {2, 3}
+
+
+def is_environmental_decoy_candidate(path: Path, root: Path, tracked_relatives: set[str]) -> bool:
+    rel = normalize_rel(path, root).lower()
+    if rel in tracked_relatives:
+        return False
+    if path.suffix.lower() not in ENVIRONMENTAL_DECOY_EXTENSIONS:
+        return False
+    try:
+        file_stat = path.stat()
+    except OSError as exc:
+        return os_error_reports_missing(exc)
+    if file_stat.st_size != 0:
+        return False
+    if not has_hidden_system_attributes(file_stat):
+        return False
+    return read_probe_reports_missing(path)
+
+
 def is_text_file(path: Path) -> bool:
     suffix = ".gitignore" if path.name == ".gitignore" else path.suffix.lower()
     return suffix in TEXT_SUFFIXES
@@ -700,10 +754,15 @@ def check_forbidden_tracked_files(root: Path, tracked_files: list[Path], issues:
             add_issue(issues, "forbidden", "ERROR", f"forbidden tracked path: {rel}")
 
 
-def check_worktree_storage(root: Path, issues: list[Issue]) -> None:
+def check_worktree_storage(root: Path, issues: list[Issue], tracked_files: list[Path] | None = None) -> None:
+    tracked_relatives = {normalize_rel(path, root).lower() for path in tracked_files or []}
     for path in iter_worktree_files(root):
         if is_forbidden_artifact(path, root):
-            add_issue(issues, "storage", "ERROR", f"repo worktree forbidden artifact: {normalize_rel(path, root)}")
+            rel = normalize_rel(path, root)
+            if is_environmental_decoy_candidate(path, root, tracked_relatives):
+                add_issue(issues, "storage", "INFO", f"repo worktree environmental decoy candidate: {rel}")
+            else:
+                add_issue(issues, "storage", "ERROR", f"repo worktree forbidden artifact: {rel}")
 
 
 def check_csv_files(root: Path, issues: list[Issue]) -> dict[str, list[dict[str, str]]]:
@@ -1078,6 +1137,31 @@ def check_network_patterns(root: Path, source_files: list[Path], issues: list[Is
                     add_issue(issues, "network", "ERROR", f"hostname endpoint in active config: {rel}:{line_no}")
 
 
+def allowed_documented_path(value: str) -> bool:
+    normalized = value.strip().rstrip(".,;)").replace("\\", "/").lower()
+    return any(
+        normalized == prefix or normalized.startswith(prefix + "/")
+        for prefix in ALLOWED_DOCUMENTED_PATH_PREFIXES
+    )
+
+
+def check_local_path_leaks(root: Path, source_files: list[Path], issues: list[Issue]) -> None:
+    for path in source_files:
+        if not path.exists() or path.suffix.lower() not in {".md", ".csv"}:
+            continue
+        rel = normalize_rel(path, root)
+        try:
+            lines = path.read_text(encoding="utf-8-sig", errors="ignore").splitlines()
+        except OSError:
+            continue
+        for line_no, line in enumerate(lines, start=1):
+            for match in WINDOWS_ABSOLUTE_PATH_RE.finditer(line):
+                if not allowed_documented_path(match.group(0)):
+                    add_issue(issues, "safety", "ERROR", f"local absolute path candidate: {rel}:{line_no}")
+            if UNC_RE.search(line):
+                add_issue(issues, "safety", "ERROR", f"UNC path candidate in documentation/register: {rel}:{line_no}")
+
+
 def check_acceptance_trace(root: Path, issues: list[Issue]) -> None:
     path = root / "ACCEPTANCE_TRACE.md"
     if not path.exists():
@@ -1243,7 +1327,7 @@ def run_checks(root: Path | str) -> list[Issue]:
     check_git_safety(root, issues)
     check_gitignore(root, issues)
     check_forbidden_tracked_files(root, tracked_files, issues)
-    check_worktree_storage(root, issues)
+    check_worktree_storage(root, issues, tracked_files)
     parsed_csv = check_csv_files(root, issues)
     check_review_literals(parsed_csv, issues)
     check_source_reference_integrity(parsed_csv, issues)
@@ -1251,6 +1335,7 @@ def run_checks(root: Path | str) -> list[Issue]:
     check_profile(root, issues)
     check_secret_patterns(root, source_candidate_files, issues)
     check_network_patterns(root, source_candidate_files, issues)
+    check_local_path_leaks(root, source_candidate_files, issues)
     check_acceptance_trace(root, issues)
     check_document_authority(root, issues)
     return issues

@@ -36,5 +36,6 @@ bin/
 obj/
 TestResults/
 .coverage/
+.tmp.driveupload/
 __pycache__/
 *.pyc

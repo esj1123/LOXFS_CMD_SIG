@@ -85,6 +85,40 @@ powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 m1-readiness
 
 Do not begin M1 Protocol Core unless the output is `M1_READINESS_READY`.
 
+## Owner Review Packet
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 owner-review
+```
+
+Use this packet when `m1-readiness` reports owner/source blockers:
+
+1. Review `DEC-DEV-001`, `DEC-STORAGE-001`, and `DEC-REPO-001` in `references/decision_register.csv`.
+2. Review the missing source rows in `references/source_register.csv`.
+3. Confirm that source metadata uses only aliases and 64-hex SHA-256 values.
+4. Keep unavailable evidence as `TBD` and `not_collected`.
+5. Re-run `validate`, `test`, `quality-gate`, and `m1-readiness`.
+
+Do not close decisions, approve source rows, or fill hashes from memory. Do not put actual files, actual paths, credentials, endpoints, DBN/package files, captures, or configurations into Git.
+
+## Source Review Recheck
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 source-review
+```
+
+`source-review` compares the provisional alias, size, and SHA-256 values in `docs/SOURCE_REVIEW_NOTES.md` against files under `LOXFS_CMD_SIG_LOCAL_ROOT`. It is read-only and does not print the external root path.
+
+If `LOXFS_CMD_SIG_LOCAL_ROOT` is not set, or the root is unavailable, the command reports `SOURCE_REVIEW_RECHECK_BLOCKED`.
+
+Use an explicit external root only for a local read-only check:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 source-review --local-root C:\LOXFS_CMD_SIG_LOCAL
+```
+
+The explicit path is an operator command input, not a value to store in Git. Do not use a repository-internal path. Do not copy actual artifacts into this repository.
+
 ## Closeout Receipt
 
 Every implementation closeout should include:

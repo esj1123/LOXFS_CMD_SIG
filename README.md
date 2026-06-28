@@ -79,6 +79,7 @@ powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 inventory
 powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 validate
 powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 test
 powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 quality-gate
+powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 owner-review
 powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 m1-readiness
 ```
 
@@ -98,7 +99,16 @@ Primary:
 powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 validate
 powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 test
 powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 quality-gate
+powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 owner-review
 powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 m1-readiness
 ```
+
+Source metadata recheck is a separate read-only step for owner-reviewed external artifacts:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\repo.ps1 source-review
+```
+
+It reports `SOURCE_REVIEW_RECHECK_BLOCKED` until `LOXFS_CMD_SIG_LOCAL_ROOT` or `--local-root` points to an available approved external artifact root.
 
 Direct Python remains a fallback for environments that cannot run the PowerShell entrypoint.

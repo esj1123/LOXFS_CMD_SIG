@@ -31,6 +31,16 @@ Validator and quality gate rule changes require standard-library `unittest` cove
 
 Required negative coverage includes forbidden tracked artifacts, worktree artifacts, credential assignments, non-loopback endpoints, unapproved Git remotes, approved backup-only remote handling, missing `.gitignore` patterns, source-reference orphans, malformed protocol offsets, malformed ACK pairs, unsafe profile flags, and invalid external local roots.
 
+Environmental decoy handling also requires regression coverage. Tests must prove that a classified decoy candidate does not become a storage ERROR, while tracked or openable forbidden artifacts still fail.
+
+Local path leak detection requires regression coverage. Tests must prove that Markdown or CSV local absolute path candidates fail without printing the path value, while documented template paths remain allowed.
+
+M1 readiness changes require regression coverage for source metadata completeness. Tests must prove that placeholder source fields, invalid SHA-256 values, absolute paths, URLs, and unreviewed states do not satisfy readiness.
+
+Owner review reporting changes require regression coverage that proves required actions are reported from register state without printing source field values that may contain actual paths.
+
+Source review recheck changes require regression coverage that proves provisional alias, size, and SHA-256 metadata can be matched against synthetic external files, missing files are reported without printing the external root path, and repository-internal local roots are blocked.
+
 Tests must create independent temporary Git repositories under `tempfile` and must not mutate the current repository. Synthetic strings may be used only as generated fixture contents; actual credentials, endpoints, binaries, captures, configurations, and Office/PDF artifacts must not be committed.
 
 Run:

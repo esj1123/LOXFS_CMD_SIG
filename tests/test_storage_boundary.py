@@ -4,6 +4,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 
@@ -23,6 +24,10 @@ def errors(root: Path) -> list[str]:
     return [issue.message for issue in validate_repo.run_checks(root) if issue.level == "ERROR"]
 
 
+def issues(root: Path) -> list[validate_repo.Issue]:
+    return validate_repo.run_checks(root)
+
+
 class StorageBoundaryTests(unittest.TestCase):
     def test_untracked_pdf_in_repo_root_fails_storage_boundary(self) -> None:
         with make_valid_repo() as root_name:
@@ -37,6 +42,45 @@ class StorageBoundaryTests(unittest.TestCase):
             write_text(root, "untracked.docx", "synthetic text only")
             messages = errors(root)
             self.assertTrue(any("repo worktree forbidden artifact" in message for message in messages), messages)
+
+    def test_openable_zero_byte_office_file_still_fails_storage_boundary(self) -> None:
+        with make_valid_repo() as root_name:
+            root = Path(root_name)
+            write_text(root, "zero-byte.docx", "")
+            messages = errors(root)
+            self.assertTrue(any("repo worktree forbidden artifact" in message for message in messages), messages)
+
+    def test_environmental_decoy_candidate_is_not_storage_error(self) -> None:
+        with make_valid_repo() as root_name:
+            root = Path(root_name)
+            write_text(root, "security-decoy.docx", "")
+            decoy_path = root / "security-decoy.docx"
+
+            def fake_decoy(path: Path, _root: Path, _tracked: set[str]) -> bool:
+                return path == decoy_path
+
+            with patch("validate_repo.is_environmental_decoy_candidate", side_effect=fake_decoy):
+                observed = issues(root)
+
+            messages = [issue.message for issue in observed]
+            storage_errors = [
+                issue
+                for issue in observed
+                if issue.level == "ERROR" and issue.category == "storage" and "security-decoy.docx" in issue.message
+            ]
+            self.assertEqual(storage_errors, [], messages)
+            self.assertTrue(any("environmental decoy candidate: security-decoy.docx" in message for message in messages), messages)
+
+    def test_tracked_environmental_decoy_name_still_fails(self) -> None:
+        with make_valid_repo() as root_name:
+            root = Path(root_name)
+            write_text(root, "security-decoy.docx", "")
+            git(root, "add", "-f", "security-decoy.docx")
+
+            with patch("validate_repo.is_environmental_decoy_candidate", return_value=True):
+                messages = errors(root)
+
+            self.assertTrue(any("forbidden tracked extension" in message for message in messages), messages)
 
     def test_external_local_root_inside_repo_fails(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

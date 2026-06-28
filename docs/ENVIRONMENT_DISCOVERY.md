@@ -4,17 +4,17 @@ Discovery date: 2026-06-18.
 
 ## Requested Root
 
-`C:\Users\KSLV-II\Desktop\Codex\LOXFS_CMD_SIG_HARNESS`
+`<RepoWorktree>`
 
 ## Preflight Results
 
 | Check | Result |
 | --- | --- |
-| Current path | `C:\Users\KSLV-II\Desktop\Codex\LOXFS_CMD_SIG_HARNESS` |
+| Current path | `<RepoWorktree>` |
 | Initial tree | No subfolders were present before bootstrap. |
 | Existing files | A hidden zero-byte Office artifact existed and was preserved. |
 | `.git` in requested root before bootstrap | Absent |
-| Parent Git repository | `C:/Users/KSLV-II/Desktop/Codex` was detected by `git rev-parse --show-toplevel` before local init. |
+| Parent Git repository | `<ParentGitRoot>` was detected by `git rev-parse --show-toplevel` before local init. |
 | Existing README.md | Not present before bootstrap. |
 | Existing AGENTS.md | Not present before bootstrap. |
 | Existing STATUS.md | Not present before bootstrap. |
@@ -24,7 +24,7 @@ Discovery date: 2026-06-18.
 | git --version | `git version 2.53.0.windows.1` |
 | py --version | Failed: no installed Python found on PATH. |
 | python --version | Failed: `python.exe` could not be launched from PATH. |
-| Bundled local Python | Available at `C:\Users\KSLV-II\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe`; used for verification. |
+| Bundled local Python | Available as `<BundledPython>` in the Codex runtime; used for verification through `LOXFS_HARNESS_PYTHON`. |
 | dotnet --info | .NET SDK `10.0.201`; additional SDK `10.0.109`; host `10.0.9`. |
 | PowerShell version | `5.1.26100.8655` |
 
@@ -38,8 +38,8 @@ Discovery date: 2026-06-19.
 
 | Check | Result |
 | --- | --- |
-| Current path | `C:\Users\KSLV-II\Desktop\Codex\LOXFS_CMD_SIG_HARNESS` |
-| Git top-level | `C:/Users/KSLV-II/Desktop/Codex/LOXFS_CMD_SIG_HARNESS` |
+| Current path | `<RepoWorktree>` |
+| Git top-level | `<RepoWorktree>` |
 | Parent Git repository | Detected by ancestor `.git`; tracked as `DEC-REPO-001`. |
 | Plain Git status | Blocked by dubious ownership unless per-command `safe.directory` is supplied. |
 | Git remote | `origin` is configured as backup/publication only and is not part of harness runtime behavior. |

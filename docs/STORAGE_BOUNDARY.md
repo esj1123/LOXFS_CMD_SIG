@@ -46,6 +46,18 @@ Target directory shape:
 - Source registers record path aliases, source identity, and SHA-256 values only.
 - Credential values and actual endpoint values are not recorded in registers or notes.
 
+## Environmental Decoy Entries
+
+Some workstations project hidden/system zero-byte Office entries into protected user folders. These entries can appear in directory enumeration while normal stat/open/hash operations report the path as missing.
+
+The validator may classify such entries as environmental decoy INFO only when all available checks indicate that no openable artifact content exists. This is not a filename allow-list. Any tracked, openable, hashable, or non-zero Office/PDF/binary/configuration artifact remains a storage ERROR.
+
+Keeping the source worktree on Desktop is an owner topology choice. It does not permit actual artifacts in the repository and does not close the nested repository or external storage decisions by itself.
+
+## Temporary Upload Directories
+
+Temporary upload/cache directories such as `.tmp.driveupload/` must not be tracked. They may be ignored by Git to reduce status noise, but ignore rules do not exempt their contents from storage boundary scanning.
+
 ## Scripts
 
 - `scripts/bootstrap_local_workspace.py` plans or creates the external directory skeleton.

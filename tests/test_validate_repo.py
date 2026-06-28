@@ -506,6 +506,21 @@ class ValidateRepoTests(unittest.TestCase):
             git(root, "add", "settings.json")
             self.assertFalse(any("credential candidate" in message for message in errors(root)))
 
+    def test_markdown_local_absolute_path_fails_without_printing_value(self) -> None:
+        with make_valid_repo() as root_name:
+            root = Path(root_name)
+            path_value = "C:\\Users\\Owner\\Documents\\source.pdf"
+            write_text(root, "docs/local_note.md", f"source path: {path_value}\n")
+            messages = errors(root)
+            self.assertTrue(any("local absolute path candidate: docs/local_note.md:1" in message for message in messages), messages)
+            self.assertFalse(any(path_value in message for message in messages), messages)
+
+    def test_documented_template_local_root_path_allowed(self) -> None:
+        with make_valid_repo() as root_name:
+            root = Path(root_name)
+            write_text(root, "docs/local_root_example.md", "template only: C:\\LOXFS_CMD_SIG_LOCAL\\artifacts\n")
+            self.assertFalse(any("local absolute path candidate" in message for message in errors(root)))
+
     def test_non_loopback_ipv4_in_profile_fails(self) -> None:
         with make_valid_repo() as root_name:
             root = Path(root_name)
@@ -551,6 +566,13 @@ class ValidateRepoTests(unittest.TestCase):
             patterns = [pattern for pattern in validate_repo.REQUIRED_GITIGNORE_PATTERNS if pattern != "local/"]
             write_text(root, ".gitignore", "\n".join(patterns) + "\n")
             self.assert_has_error(root, "required .gitignore pattern missing: local/")
+
+    def test_missing_temporary_upload_gitignore_pattern_fails(self) -> None:
+        with make_valid_repo() as root_name:
+            root = Path(root_name)
+            patterns = [pattern for pattern in validate_repo.REQUIRED_GITIGNORE_PATTERNS if pattern != ".tmp.driveupload/"]
+            write_text(root, ".gitignore", "\n".join(patterns) + "\n")
+            self.assert_has_error(root, "required .gitignore pattern missing: .tmp.driveupload/")
 
 
 if __name__ == "__main__":

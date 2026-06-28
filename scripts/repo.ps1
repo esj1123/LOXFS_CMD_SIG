@@ -1,6 +1,6 @@
 param(
     [Parameter(Position = 0)]
-    [ValidateSet("bootstrap", "inventory", "migrate-plan", "validate", "test", "quality-gate", "m1-readiness", "status")]
+    [ValidateSet("bootstrap", "inventory", "migrate-plan", "validate", "test", "quality-gate", "m1-readiness", "owner-review", "source-review", "status")]
     [string]$Command = "status",
 
     [Parameter(ValueFromRemainingArguments = $true)]
@@ -105,5 +105,11 @@ switch ($Command) {
     }
     "m1-readiness" {
         Invoke-HarnessPython -PythonCommand (@("-B", (Join-Path $ScriptDir "m1_readiness.py"), "--root", $RepoRoot.Path) + $RemainingArgs)
+    }
+    "owner-review" {
+        Invoke-HarnessPython -PythonCommand (@("-B", (Join-Path $ScriptDir "owner_review_packet.py"), "--root", $RepoRoot.Path) + $RemainingArgs)
+    }
+    "source-review" {
+        Invoke-HarnessPython -PythonCommand (@("-B", (Join-Path $ScriptDir "source_review_recheck.py"), "--root", $RepoRoot.Path) + $RemainingArgs)
     }
 }

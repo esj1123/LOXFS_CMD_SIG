@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- Record owner approval for external artifact storage policy and current Desktop/nested repository topology while keeping actual paths out of Git.
+- Record owner-approved M1 metadata for `SRC-PROTO-001` and `SRC-K117-001` using aliases and SHA-256 values only.
+- Defer `SRC-NA-001` from direct M1 readiness to M2+ NetArrays/tag/adapter work.
+- Record owner approval for Python standard-library M1 Protocol Core while keeping C#/.NET/C++ as M2+ adapter or integration options.
+- Record owner-approved `SRC-TIME-001` source identity metadata using alias and SHA-256 only; actual timing/config values remain external and deferred.
+- Clear current M1 readiness blockers; `repo.ps1 m1-readiness` reports `M1_READINESS_READY`.
+- Keep the source worktree on Desktop by owner direction while classifying non-openable hidden/system zero-byte Office/PDF environmental decoy entries separately from real forbidden artifacts.
+- Add regression coverage so environmental decoy candidates do not mask tracked or openable forbidden artifacts.
+- Tighten M1 readiness source metadata checks for non-absolute path aliases, 64-hex SHA-256 values, and reviewed/approved source states.
+- Add owner review packet guidance for remaining M1 decision and source baseline blockers.
+- Add dry-run owner review packet reporting through `repo.ps1 owner-review`.
+- Add provisional source review notes and read-only source metadata recheck reporting through `repo.ps1 source-review`.
+- Require `.tmp.driveupload/` in `.gitignore` while keeping validator worktree scanning active for its contents.
+- Replace local environment paths with aliases and add Markdown/CSV local absolute path leak detection while allowing the documented external-root template path.
+- Create and observe external root candidates while leaving artifact migration dry-run only; latest `<CandidateExternalRoot>` has 0 visible files after initial skeleton creation and sentinel probe.
 - Refresh storage-boundary status with dry-run bootstrap and migration planning results; no user files were moved or deleted.
 - Treat the owner-designated GitHub `origin` as backup/publication only, not as harness runtime, source baseline, validation evidence, or readiness authority.
 - Update Git safety validation so the approved backup remote is allowed while unapproved remotes remain errors.
